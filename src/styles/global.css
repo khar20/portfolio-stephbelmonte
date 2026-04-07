@@ -2,10 +2,15 @@
     --bg-color: #050505;
     --text-color: #f0f0f0;
     --accent-color: #888888;
-    --font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --font-main: 'DM Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --font-serif: 'Playfair Display', Georgia, serif;
+    --container-max: 1440px;
+    --container-pad: clamp(1.5rem, 5vw, 4rem);
 }
 
-* {
+*,
+*::before,
+*::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -15,13 +20,17 @@ html {
     background-color: var(--bg-color);
     color: var(--text-color);
     font-family: var(--font-main);
+    font-size: 16px;
     overflow-x: hidden;
     scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 body {
     overflow-x: hidden;
     width: 100%;
+    min-height: 100dvh;
 }
 
 a {
@@ -29,24 +38,56 @@ a {
     text-decoration: none;
 }
 
+button {
+    font-family: var(--font-main);
+    color: inherit;
+}
+
 img {
     max-width: 100%;
     display: block;
     filter: grayscale(100%);
-    transition: filter 0.3s ease;
+    transition: filter 0.35s ease;
 }
 
 img:hover {
     filter: grayscale(0%);
 }
 
+/* global use */
 .container {
-    max-width: 1600px;
-    margin: 0 auto;
-    padding: 0 2rem;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-pad);
+    width: 100%;
 }
 
 ::selection {
     background: var(--text-color);
     color: var(--bg-color);
+}
+
+/* focus-visible only */
+:focus {
+    outline: none;
+}
+
+:focus-visible {
+    outline: 1px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 3px;
+}
+
+/* reduced motion */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    html {
+        scroll-behavior: auto;
+    }
 }

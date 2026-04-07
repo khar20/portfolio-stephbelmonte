@@ -1,0 +1,558 @@
+---
+const projects = [
+    {
+        id: "silence",
+        title: "SILENCE",
+        type: "Personal",
+        year: "2025",
+        poster: "https://placehold.co/480x680/0a0a0a/888?text=SILENCE",
+        images: [
+            "https://placehold.co/900x600/111/ccc?text=Silence+01",
+            "https://placehold.co/900x600/0d0d0d/bbb?text=Silence+02",
+            "https://placehold.co/900x600/0a0a0a/aaa?text=Silence+03",
+        ],
+        description:
+            "A meditation on empty architectural space. Shot-based lighting studies exploring how absence defines form. Built in Blender with a fully procedural material pipeline.",
+        tags: ["Blender", "EEVEE", "Archviz", "Lighting"],
+    },
+    {
+        id: "void",
+        title: "VOID",
+        type: "Commercial",
+        year: "2024",
+        poster: "https://placehold.co/480x680/080808/666?text=VOID",
+        images: [
+            "https://placehold.co/900x600/0c0c0c/ddd?text=Void+01",
+            "https://placehold.co/900x600/101010/ccc?text=Void+02",
+        ],
+        description:
+            "Commercial campaign for a luxury watch brand. Atmospheric product renders with deep shadow and high-contrast lighting. Delivered as 4K stills and a 15s loop.",
+        tags: ["Cinema 4D", "Octane", "Product", "Commercial"],
+    },
+    {
+        id: "monolith",
+        title: "MONOLITH",
+        type: "Study",
+        year: "2025",
+        poster: "https://placehold.co/480x680/060606/999?text=MONOLITH",
+        images: [
+            "https://placehold.co/900x600/111/fff?text=Monolith+01",
+            "https://placehold.co/900x600/0e0e0e/eee?text=Monolith+02",
+            "https://placehold.co/900x600/090909/ddd?text=Monolith+03",
+        ],
+        description:
+            "Form study exploring geological mass and material erosion. Procedural texturing with displacement maps generated from real rock scans.",
+        tags: ["Blender", "Cycles", "Sculpting", "Procedural"],
+    },
+    {
+        id: "echo",
+        title: "ECHO",
+        type: "Personal",
+        year: "2026",
+        poster: "https://placehold.co/480x680/050505/777?text=ECHO",
+        images: [
+            "https://placehold.co/900x600/0f0f0f/ccc?text=Echo+01",
+        ],
+        description:
+            "Sound-to-form experiment. Audio waveforms from field recordings transformed into sculptural 3D meshes. A bridge between acoustic space and visual geometry.",
+        tags: ["Houdini", "Redshift", "Procedural", "Experimental"],
+    },
+    {
+        id: "pale",
+        title: "PALE",
+        type: "Commercial",
+        year: "2024",
+        poster: "https://placehold.co/480x680/030303/555?text=PALE",
+        images: [
+            "https://placehold.co/900x600/0a0a0a/eee?text=Pale+01",
+            "https://placehold.co/900x600/0d0d0d/ccc?text=Pale+02",
+        ],
+        description:
+            "Branding visuals for a minimalist skincare line. Soft diffuse lighting, translucent material study, and typographic integration with 3D assets.",
+        tags: ["Cinema 4D", "Redshift", "Product", "Branding"],
+    },
+];
+---
+
+<section class="projects-section" id="projects">
+    <div class="section-header container">
+        <h2 class="section-title">PROJECTS</h2>
+        <div class="carousel-controls">
+            <button class="ctrl-btn" id="prev-btn" aria-label="Previous">←</button>
+            <span class="carousel-counter">
+                <span id="current-idx">01</span>
+                <span class="counter-sep"> / </span>
+                <span>{String(projects.length).padStart(2, '0')}</span>
+            </span>
+            <button class="ctrl-btn" id="next-btn" aria-label="Next">→</button>
+        </div>
+    </div>
+
+    <!-- horizontal poster carousel -->
+    <div class="carousel-track-wrapper">
+        <div class="carousel-track" id="carousel-track">
+            {projects.map((p, i) => (
+                <div
+                    class={`poster-card ${i === 0 ? 'active' : ''}`}
+                    data-index={String(i)}
+                    data-id={p.id}
+                    role="button"
+                    tabindex="0"
+                    aria-label={`View project ${p.title}`}
+                >
+                    <div class="poster-img-wrap">
+                        <img src={p.poster} alt={p.title} loading="lazy" />
+                        <div class="poster-overlay">
+                            <span class="poster-type">{p.type}</span>
+                        </div>
+                    </div>
+                    <div class="poster-meta">
+                        <h3 class="poster-title">{p.title}</h3>
+                        <span class="poster-year">{p.year}</span>
+                    </div>
+                </div>
+            ))}
+        </div>
+    </div>
+
+    <!-- project detail panels -->
+    <div class="detail-panel container">
+        {projects.map((p, i) => (
+            <div class={`detail-content ${i === 0 ? 'visible' : ''}`} data-detail={p.id}>
+                <div class="detail-media">
+                    <div class="detail-img-track" id={`track-${p.id}`}>
+                        {p.images.map((img, j) => (
+                            <div class="detail-slide">
+                                <img src={img} alt={`${p.title} render ${j + 1}`} loading="lazy" />
+                            </div>
+                        ))}
+                    </div>
+                    {p.images.length > 1 && (
+                        <div class="slide-dots" data-project={p.id}>
+                            {p.images.map((_, j) => (
+                                <button
+                                    class={`dot ${j === 0 ? 'active' : ''}`}
+                                    data-slide={String(j)}
+                                    aria-label={`Slide ${j + 1}`}
+                                />
+                            ))}
+                        </div>
+                    )}
+                </div>
+                <div class="detail-info">
+                    <div class="detail-top">
+                        <span class="detail-type-label">{p.type} — {p.year}</span>
+                        <h3 class="detail-title">{p.title}</h3>
+                    </div>
+                    <p class="detail-desc">{p.description}</p>
+                    <div class="detail-tags">
+                        {p.tags.map(tag => (
+                            <span class="tag">{tag}</span>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        ))}
+    </div>
+</section>
+
+<script>
+    const cards = Array.from(document.querySelectorAll<HTMLElement>(".poster-card"));
+    const details = Array.from(document.querySelectorAll<HTMLElement>(".detail-content"));
+    const currentIdxEl = document.getElementById("current-idx");
+    const prevBtn = document.getElementById("prev-btn");
+    const nextBtn = document.getElementById("next-btn");
+    let current = 0;
+
+    function activate(idx: number) {
+        cards[current].classList.remove("active");
+        const prevId = cards[current].dataset.id!;
+        details.find(d => d.dataset.detail === prevId)?.classList.remove("visible");
+
+        current = ((idx % cards.length) + cards.length) % cards.length;
+
+        cards[current].classList.add("active");
+        const nextId = cards[current].dataset.id!;
+        details.find(d => d.dataset.detail === nextId)?.classList.add("visible");
+        if (currentIdxEl) currentIdxEl.textContent = String(current + 1).padStart(2, "0");
+
+        cards[current].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    }
+
+    prevBtn?.addEventListener("click", () => activate(current - 1));
+    nextBtn?.addEventListener("click", () => activate(current + 1));
+
+    cards.forEach((card, i) => {
+        card.addEventListener("click", () => activate(i));
+        card.addEventListener("keydown", (e) => {
+            if ((e as KeyboardEvent).key === "Enter") activate(i);
+        });
+    });
+
+    // Slide dots
+    document.querySelectorAll<HTMLElement>(".slide-dots").forEach(dotsEl => {
+        const projectId = dotsEl.dataset.project!;
+        const imgTrack = document.getElementById(`track-${projectId}`);
+        const dots = Array.from(dotsEl.querySelectorAll<HTMLElement>(".dot"));
+        let slideIdx = 0;
+
+        dots.forEach((dot, j) => {
+            dot.addEventListener("click", () => {
+                dots[slideIdx].classList.remove("active");
+                slideIdx = j;
+                dots[slideIdx].classList.add("active");
+                if (imgTrack) imgTrack.style.transform = `translateX(-${slideIdx * 100}%)`;
+            });
+        });
+    });
+
+    // Drag-to-scroll carousel
+    const trackWrapper = document.querySelector<HTMLElement>(".carousel-track-wrapper");
+    if (trackWrapper) {
+        let isDown = false;
+        let startX = 0;
+        let scrollLeft = 0;
+        trackWrapper.addEventListener("mousedown", (e) => {
+            isDown = true;
+            startX = e.pageX - trackWrapper.offsetLeft;
+            scrollLeft = trackWrapper.scrollLeft;
+            trackWrapper.style.cursor = "grabbing";
+        });
+        trackWrapper.addEventListener("mouseleave", () => { isDown = false; trackWrapper.style.cursor = "grab"; });
+        trackWrapper.addEventListener("mouseup", () => { isDown = false; trackWrapper.style.cursor = "grab"; });
+        trackWrapper.addEventListener("mousemove", (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - trackWrapper.offsetLeft;
+            trackWrapper.scrollLeft = scrollLeft - (x - startX) * 1.5;
+        });
+    }
+</script>
+
+<style>
+    .projects-section {
+        padding: 8rem 0 6rem;
+        background: var(--bg-color);
+        overflow: hidden;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 3rem;
+    }
+
+    .section-title {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(2.5rem, 7vw, 7rem);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1;
+    }
+
+    .carousel-controls {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .ctrl-btn {
+        background: none;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: var(--text-color);
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: border-color 0.2s, background 0.2s;
+        flex-shrink: 0;
+    }
+
+    .ctrl-btn:hover {
+        border-color: var(--text-color);
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .carousel-counter {
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        opacity: 0.4;
+        font-variant-numeric: tabular-nums;
+        min-width: 5ch;
+        text-align: center;
+    }
+
+    .carousel-track-wrapper {
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 0.5rem 2rem 2rem;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        cursor: grab;
+    }
+
+    .carousel-track-wrapper::-webkit-scrollbar {
+        display: none;
+    }
+
+    .carousel-track {
+        display: flex;
+        gap: 1.5rem;
+        width: max-content;
+        padding: 0.5rem 1rem;
+    }
+
+    .poster-card {
+        flex-shrink: 0;
+        width: clamp(180px, 22vw, 280px);
+        cursor: pointer;
+        transition: opacity 0.4s ease, filter 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        outline: none;
+    }
+
+    .poster-card:not(.active) {
+        opacity: 0.4;
+        filter: grayscale(80%);
+        transform: scale(0.96);
+    }
+
+    .poster-card.active {
+        opacity: 1;
+        filter: none;
+        transform: scale(1);
+    }
+
+    .poster-card:not(.active):hover {
+        opacity: 0.65;
+        transform: scale(0.98);
+    }
+
+    .poster-card:focus-visible {
+        outline: 1px solid rgba(255, 255, 255, 0.5);
+        outline-offset: 4px;
+    }
+
+    .poster-img-wrap {
+        position: relative;
+        aspect-ratio: 3 / 4;
+        overflow: hidden;
+        border-radius: 3px;
+        background: #111;
+        margin-bottom: 0.9rem;
+    }
+
+    .poster-img-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: none;
+        transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .poster-card:hover .poster-img-wrap img {
+        transform: scale(1.05);
+    }
+
+    .poster-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.65) 0%, transparent 55%);
+        display: flex;
+        align-items: flex-end;
+        padding: 1rem;
+    }
+
+    .poster-type {
+        font-size: 0.62rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        opacity: 0.7;
+    }
+
+    .poster-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+    }
+
+    .poster-title {
+        font-size: 0.85rem;
+        font-weight: 500;
+        letter-spacing: 0.1em;
+    }
+
+    .poster-year {
+        font-size: 0.68rem;
+        opacity: 0.35;
+    }
+
+    .detail-panel {
+        margin-top: 4rem;
+        min-height: 380px;
+    }
+
+    .detail-content {
+        display: none;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: clamp(2rem, 5vw, 5rem);
+        align-items: start;
+    }
+
+    .detail-content.visible {
+        display: grid;
+        animation: fadeSlide 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes fadeSlide {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .detail-media {
+        position: relative;
+        overflow: hidden;
+        border-radius: 3px;
+        background: #0d0d0d;
+        aspect-ratio: 3 / 2;
+    }
+
+    .detail-img-track {
+        display: flex;
+        height: 100%;
+        transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .detail-slide {
+        flex-shrink: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .detail-slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: none;
+    }
+
+    .slide-dots {
+        position: absolute;
+        bottom: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 0.5rem;
+        z-index: 2;
+    }
+
+    .dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        border: none;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.2s;
+        padding: 0;
+    }
+
+    .dot.active {
+        background: rgba(255, 255, 255, 0.9);
+        transform: scale(1.4);
+    }
+
+    .detail-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        padding-top: 0.25rem;
+    }
+
+    .detail-type-label {
+        font-size: 0.68rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        opacity: 0.35;
+        display: block;
+        margin-bottom: 0.6rem;
+    }
+
+    .detail-title {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(2rem, 4vw, 3.5rem);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1;
+    }
+
+    .detail-desc {
+        font-size: 0.92rem;
+        line-height: 1.8;
+        opacity: 0.6;
+        font-weight: 300;
+        max-width: 44ch;
+    }
+
+    .detail-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .tag {
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        padding: 0.35rem 0.9rem;
+        border-radius: 2px;
+        font-size: 0.62rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        opacity: 0.55;
+        transition: opacity 0.2s, border-color 0.2s;
+    }
+
+    .tag:hover {
+        opacity: 0.85;
+        border-color: rgba(255, 255, 255, 0.35);
+    }
+
+    /* responsive */
+    @media (max-width: 900px) {
+        .detail-content.visible {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        .detail-panel {
+            min-height: unset;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .projects-section {
+            padding: 5rem 0 4rem;
+        }
+        .section-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1.5rem;
+            padding: 0 1.5rem;
+        }
+        .poster-card {
+            width: clamp(155px, 55vw, 210px);
+        }
+        .carousel-track-wrapper {
+            padding: 0.5rem 1.5rem 1.5rem;
+        }
+    }
+</style>

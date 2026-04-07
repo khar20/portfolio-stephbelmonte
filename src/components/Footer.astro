@@ -1,66 +1,303 @@
-<footer class="footer container" id="contact">
-    <div class="divider"></div>
-    <div class="footer-content">
-        <div class="contact-info">
-            <h3>CONTACT</h3>
-            <a href="mailto:steph.belmonte@example.com"
-                >steph.belmonte@example.com</a
-            >
-        </div>
-        <div class="social-links">
-            <h3>SOCIALS</h3>
-            <a href="#" target="_blank">Behance</a>
-            <a href="#" target="_blank">Instagram (@polaris.s.b)</a>
-            <a href="#" target="_blank">LinkedIn</a>
+<footer class="footer" id="contact">
+    <div class="contact-section container">
+        <div class="contact-eyebrow">GET IN TOUCH</div>
+        <h2 class="contact-heading">
+            <span class="heading-line">Let's create</span>
+            <span class="heading-line italic">together.</span>
+        </h2>
+
+        <div class="contact-grid">
+            <div class="contact-col">
+                <span class="col-label">DIRECT</span>
+                <a
+                    class="contact-link email-link"
+                    href="mailto:steph.belmonte@example.com"
+                >
+                    steph.belmonte@example.com
+                </a> <!-- todo: use actual email -->
+            </div>
+            <div class="contact-col">
+                <span class="col-label">SOCIALS</span>
+                <div class="social-links">
+                    <a
+                        href="#"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="social-item"
+                    >
+                        <span class="social-name">Instagram</span>
+                        <span class="social-handle">@polaris.s.b</span>
+                        <span class="arrow">↗</span>
+                    </a>
+                    <a
+                        href="#"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="social-item"
+                    >
+                        <span class="social-name">Behance</span>
+                        <span class="social-handle">sbelmonte</span>
+                        <span class="arrow">↗</span>
+                    </a>
+                    <a
+                        href="#"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="social-item"
+                    >
+                        <span class="social-name">LinkedIn</span>
+                        <span class="social-handle">Stephani Belmonte</span>
+                        <span class="arrow">↗</span>
+                    </a>
+                </div>
+            </div>
+            <div class="contact-col">
+                <span class="col-label">AVAILABILITY</span>
+                <div class="availability-status">
+                    <span class="status-dot"></span>
+                    <span class="status-text"
+                        >Open to freelance &amp; collaborations</span
+                    >
+                </div>
+                <p class="availability-detail">
+                    Based in Lima, Peru · Working globally
+                </p>
+            </div>
         </div>
     </div>
-    <div class="bottom-sig">
-        <span>© 2026 STEPHANI BELMONTE</span>
-        <span class="star">✦</span>
+
+    <div class="footer-bottom container">
+        <div class="bottom-divider"></div>
+        <div class="bottom-row">
+            <span class="copyright"
+                >© {new Date().getFullYear()} STEPHANI BELMONTE</span
+            >
+            <span class="separator">✦</span>
+            <span class="role-credit">3D ARTIST &amp; VISUAL DESIGNER</span>
+        </div>
     </div>
 </footer>
 
 <style>
     .footer {
+        background: var(--bg-color);
+        padding-top: 8rem;
+    }
+
+    .contact-section {
+        padding-bottom: 6rem;
+    }
+
+    .contact-eyebrow {
+        font-size: 0.65rem;
+        letter-spacing: 0.25em;
+        opacity: 0.3;
+        margin-bottom: 2.5rem;
+        text-transform: uppercase;
+    }
+
+    .contact-heading {
+        display: flex;
+        flex-direction: column;
+        font-family: "Playfair Display", serif;
+        font-size: clamp(3rem, 8vw, 8rem);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 0.9;
+        margin-bottom: 5rem;
+    }
+
+    .heading-line {
+        display: block;
+    }
+
+    .heading-line.italic {
+        font-style: italic;
+        padding-left: clamp(2rem, 8vw, 8rem);
+        opacity: 0.6;
+    }
+
+    .contact-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr 1fr;
+        gap: 4rem;
+        align-items: start;
+    }
+
+    .contact-col {
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+    }
+
+    .col-label {
+        font-size: 0.6rem;
+        letter-spacing: 0.22em;
+        opacity: 0.3;
+        text-transform: uppercase;
+        font-weight: 400;
+    }
+
+    .contact-link {
+        font-size: clamp(0.85rem, 1.5vw, 1.1rem);
+        opacity: 0.8;
+        transition: opacity 0.2s;
+        word-break: break-all;
+        font-weight: 300;
+    }
+
+    .contact-link:hover {
+        opacity: 1;
+    }
+
+    .social-links {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .social-item {
+        display: flex;
+        align-items: baseline;
+        gap: 0.5rem;
+        padding: 0.65rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        opacity: 0.6;
+        transition:
+            opacity 0.2s,
+            padding-left 0.2s;
+        font-size: 0.85rem;
+    }
+
+    .social-item:first-child {
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .social-item:hover {
+        opacity: 1;
+        padding-left: 0.5rem;
+    }
+
+    .social-name {
+        font-weight: 400;
+        min-width: 5rem;
+    }
+
+    .social-handle {
+        font-size: 0.72rem;
+        opacity: 0.45;
+        flex: 1;
+    }
+
+    .arrow {
+        font-size: 0.75rem;
+        opacity: 0.4;
+        margin-left: auto;
+    }
+
+    .availability-status {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+    }
+
+    .status-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #7fff7f;
+        box-shadow: 0 0 8px rgba(127, 255, 127, 0.6);
+        animation: pulse-dot 2.5s ease infinite;
+        flex-shrink: 0;
+    }
+
+    @keyframes pulse-dot {
+        0%,
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+        50% {
+            opacity: 0.6;
+            transform: scale(0.85);
+        }
+    }
+
+    .status-text {
+        font-size: 0.85rem;
+        opacity: 0.8;
+        font-weight: 300;
+    }
+
+    .availability-detail {
+        font-size: 0.72rem;
+        opacity: 0.3;
+        font-weight: 300;
+        letter-spacing: 0.04em;
+    }
+
+    .footer-bottom {
         padding-bottom: 2rem;
     }
 
-    .divider {
+    .bottom-divider {
         height: 1px;
-        background: var(--text-color);
-        width: 100%;
-        margin-bottom: 2rem;
-        opacity: 0.3;
+        background: rgba(255, 255, 255, 0.08);
+        margin-bottom: 1.5rem;
     }
 
-    .footer-content {
+    .bottom-row {
         display: flex;
-        justify-content: space-between;
-        margin-bottom: 4rem;
-    }
-
-    h3 {
-        font-size: 0.9rem;
-        margin-bottom: 1rem;
-        opacity: 0.5;
-    }
-
-    a {
-        display: block;
-        font-size: 1.5rem;
-        margin-bottom: 0.5rem;
-        transition: opacity 0.2s;
-    }
-
-    a:hover {
-        opacity: 0.5;
-    }
-
-    .bottom-sig {
-        display: flex;
-        justify-content: space-between;
         align-items: center;
-        font-size: 0.8rem;
+        gap: 1.5rem;
+        font-size: 0.65rem;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
+        opacity: 0.25;
+    }
+
+    .separator {
+        opacity: 0.5;
+    }
+
+    /* responsive */
+    @media (max-width: 900px) {
+        .contact-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .contact-col:first-child {
+            grid-column: 1 / -1;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .footer {
+            padding-top: 5rem;
+        }
+
+        .contact-grid {
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+        }
+
+        .contact-col:first-child {
+            grid-column: auto;
+        }
+
+        .contact-heading {
+            margin-bottom: 3.5rem;
+        }
+
+        .bottom-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .separator {
+            display: none;
+        }
     }
 </style>
