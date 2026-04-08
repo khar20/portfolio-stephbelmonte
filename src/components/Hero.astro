@@ -14,7 +14,17 @@ import ThreeScene from "./ThreeScene.svelte";
 
     <div class="center-stage container">
         <div class="graphics-wrapper">
-            <div class="astroid-shape" aria-hidden="true"></div>
+            <div class="astroid-shape" aria-hidden="true">
+                <svg viewBox="0 0 200 200" class="asteroid-svg">
+                    <path
+                        d="M100 0
+                        C100 55 55 100 0 100
+                        C55 100 100 145 100 200
+                        C100 145 145 100 200 100
+                        C145 100 100 55 100 0"
+                        fill="white"></path>
+                </svg>
+            </div>
             <h1 class="artist-name">
                 <span class="line">STEPHANI</span>
                 <span class="line">BELMONTE</span>
@@ -198,12 +208,16 @@ import ThreeScene from "./ThreeScene.svelte";
         position: absolute;
         width: clamp(260px, 44vw, 600px);
         height: clamp(260px, 44vw, 600px);
-        background-color: white;
-        clip-path: path(
-            "M300,0 C300,165 165,300 0,300 C165,300 300,435 300,600 C300,435 435,300 600,300 C435,300 300,165 300,0"
-        );
         z-index: 1;
         transform-origin: center;
+        opacity: 0.95;
+        mix-blend-mode: screen;
+    }
+
+    .asteroid-svg {
+        width: 100%;
+        height: 100%;
+        display: block;
     }
 
     .artist-name {
