@@ -4,24 +4,62 @@ import ModelViewer from "./ModelViewer.svelte";
 ---
 
 <section class="hero-section">
-    <!-- background -->
     <StarfieldBackground client:load />
 
-    <!-- top bar -->
-    <div class="top-bar container">
-        <div class="artist-brand">SB / {new Date().getFullYear()}</div>
+    <header class="navbar" role="banner">
+        <div class="navbar-inner container">
+            <!-- logo / brand -->
+            <a href="/" class="nav-brand" aria-label="Stephani Belmonte — Home">
+                <span class="brand-initials">SB</span>
+                <span class="brand-year">/ {new Date().getFullYear()}</span>
+            </a>
 
-        <nav class="skills" aria-label="Disciplines">
-            <span class="pill">3D MODELLING</span>
-            <span class="pill">SHADING</span>
-            <span class="pill">LIGHTING</span>
-        </nav>
-    </div>
+            <!-- desktop nav links -->
+            <nav class="nav-links" aria-label="Main navigation">
+                <a href="#projects" class="nav-link">Projects</a>
+                <a href="#gallery" class="nav-link">Gallery</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </nav>
 
-    <!-- hero layout -->
+            <!-- desktop discipline pills -->
+            <div class="nav-pills" aria-label="Disciplines">
+                <span class="pill">3D</span>
+                <span class="pill">SHADING</span>
+                <span class="pill">LIGHTING</span>
+            </div>
+
+            <!-- mobile hamburger -->
+            <button
+                id="menu-toggle"
+                class="menu-toggle"
+                type="button"
+                aria-label="Open menu"
+                aria-expanded="false"
+                aria-controls="mobile-menu"
+            >
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+
+        <!-- mobile menu -->
+        <div id="mobile-menu" class="mobile-menu" aria-hidden="true">
+            <nav aria-label="Mobile navigation">
+                <a href="#projects" class="mob-link">Projects</a>
+                <a href="#gallery" class="mob-link">Gallery</a>
+                <a href="#contact" class="mob-link">Contact</a>
+            </nav>
+            <div class="mob-pills">
+                <span class="pill">3D MODELLING</span>
+                <span class="pill">SHADING</span>
+                <span class="pill">LIGHTING</span>
+            </div>
+        </div>
+    </header>
+
     <div class="hero-grid container">
-        <!-- LEFT -->
-        <div class="left">
+        <div class="col-left">
             <div class="graphics-wrapper">
                 <div class="astroid-shape" aria-hidden="true">
                     <svg viewBox="0 0 200 200" class="asteroid-svg">
@@ -42,16 +80,15 @@ import ModelViewer from "./ModelViewer.svelte";
             </div>
         </div>
 
-        <!-- RIGHT -->
-        <div class="right">
-            <ModelViewer client:load />
+        <div class="col-right">
+            <div class="model-wrapper">
+                <ModelViewer client:load />
+            </div>
         </div>
     </div>
 
-    <!-- bottom ui -->
     <div class="bottom-ui container">
         <div class="role-badge">3D ARTIST</div>
-
         <div class="actions">
             <button id="about-trigger" class="btn secondary" type="button">
                 ABOUT ME
@@ -60,7 +97,6 @@ import ModelViewer from "./ModelViewer.svelte";
         </div>
     </div>
 
-    <!-- about overlay -->
     <div
         id="about-overlay"
         class="about-overlay"
@@ -77,22 +113,19 @@ import ModelViewer from "./ModelViewer.svelte";
             >
                 ✕
             </button>
-
             <span class="about-eyebrow">WHO I AM</span>
             <h2>ABOUT STEPH</h2>
-
             <p>
                 Digital sculptor and visual artist. Exploring the boundaries
                 between geometry and emotion. Based in Peru, working globally.
             </p>
-
             <div class="overlay-socials">
-                <a href="#" target="_blank" rel="noopener noreferrer">
-                    INSTA / polaris.s.b
-                </a>
-                <a href="#" target="_blank" rel="noopener noreferrer">
-                    BEHANCE / sbelmonte
-                </a>
+                <a href="#" target="_blank" rel="noopener noreferrer"
+                    >INSTA / polaris.s.b</a
+                >
+                <a href="#" target="_blank" rel="noopener noreferrer"
+                    >BEHANCE / sbelmonte</a
+                >
             </div>
         </div>
     </div>
@@ -102,12 +135,10 @@ import ModelViewer from "./ModelViewer.svelte";
     import { gsap } from "gsap";
 
     window.addEventListener("load", () => {
-        // element refs (safe after load)
         const trigger = document.getElementById("about-trigger");
         const closeBtn = document.getElementById("about-close");
         const overlay = document.getElementById("about-overlay");
 
-        // overlay controls
         function openOverlay() {
             if (!overlay) return;
             overlay.style.display = "flex";
@@ -117,7 +148,6 @@ import ModelViewer from "./ModelViewer.svelte";
 
         function closeOverlay() {
             if (!overlay) return;
-
             gsap.to(overlay, {
                 opacity: 0,
                 duration: 0.25,
@@ -130,18 +160,46 @@ import ModelViewer from "./ModelViewer.svelte";
 
         trigger?.addEventListener("click", openOverlay);
         closeBtn?.addEventListener("click", closeOverlay);
-
         overlay?.addEventListener("click", (e) => {
             if (e.target === overlay) closeOverlay();
         });
-
         document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape" && overlay?.style.display === "flex") {
+            if (e.key === "Escape" && overlay?.style.display === "flex")
                 closeOverlay();
-            }
         });
 
-        // intro animation
+        const menuToggle = document.getElementById(
+            "menu-toggle",
+        ) as HTMLButtonElement;
+        const mobileMenu = document.getElementById(
+            "mobile-menu",
+        ) as HTMLElement;
+        let menuOpen = false;
+
+        function openMenu() {
+            menuOpen = true;
+            mobileMenu.classList.add("open");
+            menuToggle.setAttribute("aria-expanded", "true");
+            mobileMenu.setAttribute("aria-hidden", "false");
+            menuToggle.classList.add("is-open");
+        }
+
+        function closeMenu() {
+            menuOpen = false;
+            mobileMenu.classList.remove("open");
+            menuToggle.setAttribute("aria-expanded", "false");
+            mobileMenu.setAttribute("aria-hidden", "true");
+            menuToggle.classList.remove("is-open");
+        }
+
+        menuToggle?.addEventListener("click", () =>
+            menuOpen ? closeMenu() : openMenu(),
+        );
+
+        mobileMenu?.querySelectorAll(".mob-link").forEach((link) => {
+            link.addEventListener("click", closeMenu);
+        });
+
         const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
         tl.from(".astroid-shape", {
@@ -154,8 +212,9 @@ import ModelViewer from "./ModelViewer.svelte";
                 { y: 80, opacity: 0, duration: 0.9, stagger: 0.18 },
                 "-=0.9",
             )
-            .from(".top-bar", { opacity: 0, y: -10, duration: 0.7 }, "-=0.5")
-            .from(".bottom-ui", { opacity: 0, y: 10, duration: 0.7 }, "<");
+            .from(".navbar", { opacity: 0, y: -12, duration: 0.7 }, "-=0.5")
+            .from(".bottom-ui", { opacity: 0, y: 12, duration: 0.7 }, "<")
+            .from(".col-right", { opacity: 0, x: 30, duration: 0.9 }, "-=0.6");
     });
 </script>
 
@@ -168,67 +227,191 @@ import ModelViewer from "./ModelViewer.svelte";
         background-color: #050505;
         overflow: hidden;
         color: white;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .navbar {
+        position: relative;
+        z-index: 20;
+        flex-shrink: 0;
+    }
+
+    .navbar-inner {
+        display: flex;
+        align-items: center;
+        height: clamp(56px, 8vh, 72px);
+        gap: 2rem;
+    }
+
+    .nav-brand {
+        display: flex;
+        align-items: baseline;
+        gap: 0.4rem;
+        flex-shrink: 0;
+    }
+
+    .brand-initials {
+        font-family: "Playfair Display", serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+    }
+
+    .brand-year {
+        font-size: 0.72rem;
+        font-weight: 300;
+        opacity: 0.45;
+        letter-spacing: 0.06em;
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 2rem;
+        margin-left: 2rem;
+    }
+
+    .nav-link {
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        opacity: 0.5;
+        transition: opacity 0.2s;
+        position: relative;
+    }
+
+    .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: -3px;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background: white;
+        transition: width 0.25s ease;
+    }
+
+    .nav-link:hover {
+        opacity: 1;
+    }
+    .nav-link:hover::after {
+        width: 100%;
+    }
+
+    .nav-pills {
+        display: flex;
+        gap: 0.5rem;
+        margin-left: auto;
+    }
+
+    .pill {
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 0.35rem 0.85rem;
+        border-radius: 50px;
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        background: rgba(0, 0, 0, 0.25);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        white-space: nowrap;
+    }
+
+    .menu-toggle {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0.4rem;
+        margin-left: auto;
+        width: 2rem;
+        height: 2rem;
+    }
+
+    .bar {
+        display: block;
+        width: 100%;
+        height: 1px;
+        background: white;
+        transition:
+            transform 0.3s ease,
+            opacity 0.3s ease;
+        transform-origin: center;
+    }
+
+    .menu-toggle.is-open .bar:nth-child(1) {
+        transform: translateY(6px) rotate(45deg);
+    }
+    .menu-toggle.is-open .bar:nth-child(2) {
+        opacity: 0;
+        transform: scaleX(0);
+    }
+    .menu-toggle.is-open .bar:nth-child(3) {
+        transform: translateY(-6px) rotate(-45deg);
+    }
+
+    .mobile-menu {
+        display: none;
+        flex-direction: column;
+        gap: 0;
+        background: rgba(5, 5, 5, 0.97);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        padding: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition:
+            max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+            padding 0.3s ease;
+    }
+
+    .mobile-menu.open {
+        max-height: 400px;
+        padding: 1rem 0 1.5rem;
+    }
+
+    .mob-link {
+        display: block;
+        padding: 0.9rem var(--container-pad);
+        font-size: 1.1rem;
+        letter-spacing: 0.06em;
+        opacity: 0.7;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        transition:
+            opacity 0.2s,
+            padding-left 0.2s;
+    }
+
+    .mob-link:hover {
+        opacity: 1;
+        padding-left: calc(var(--container-pad) + 0.5rem);
+    }
+
+    .mob-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        padding: 1.25rem var(--container-pad) 0;
     }
 
     .hero-grid {
         position: relative;
         z-index: 5;
-
+        flex: 1;
         display: grid;
         grid-template-columns: 1fr 1fr;
         align-items: center;
-
-        height: 100%;
+        min-height: 0;
     }
 
-    .left {
+    .col-left {
         display: flex;
+        align-items: center;
         justify-content: flex-start;
-    }
-
-    .right {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .top-bar {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        padding-top: clamp(1.5rem, 3vh, 2.5rem);
-        z-index: 10;
-    }
-
-    .artist-brand {
-        font-size: 0.85rem;
-        letter-spacing: 0.08em;
-        font-weight: 300;
-        opacity: 0.8;
-    }
-
-    .skills {
-        display: flex;
-        gap: 0.75rem;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-    }
-
-    .pill {
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        padding: 0.45rem 1rem;
-        border-radius: 50px;
-        font-size: 0.65rem;
-        text-transform: uppercase;
-        letter-spacing: 0.12em;
-        background: rgba(0, 0, 0, 0.25);
-        backdrop-filter: blur(8px);
+        height: 100%;
     }
 
     .graphics-wrapper {
@@ -239,8 +422,8 @@ import ModelViewer from "./ModelViewer.svelte";
 
     .astroid-shape {
         position: absolute;
-        width: clamp(260px, 44vw, 600px);
-        height: clamp(260px, 44vw, 600px);
+        width: clamp(200px, 38vw, 560px);
+        height: clamp(200px, 38vw, 560px);
         z-index: 1;
         opacity: 0.95;
         mix-blend-mode: screen;
@@ -255,7 +438,7 @@ import ModelViewer from "./ModelViewer.svelte";
         position: relative;
         z-index: 2;
         font-family: "Playfair Display", serif;
-        font-size: clamp(3.5rem, 8vw, 10rem);
+        font-size: clamp(3rem, 6.5vw, 9rem);
         line-height: 0.85;
         text-align: center;
         display: flex;
@@ -265,26 +448,42 @@ import ModelViewer from "./ModelViewer.svelte";
         letter-spacing: -0.03em;
     }
 
-    .bottom-ui {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
+    .line {
+        display: block;
+    }
 
+    .col-right {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        padding: 1rem 0;
+    }
+
+    .model-wrapper {
+        width: min(100%, 65vh);
+        height: min(100%, 65vh);
+        aspect-ratio: 1;
+    }
+
+    .bottom-ui {
+        position: relative;
+        z-index: 10;
+        flex-shrink: 0;
         display: flex;
         justify-content: space-between;
         align-items: center;
-
-        padding-bottom: clamp(1.5rem, 3vh, 2.5rem);
-        z-index: 10;
+        padding-bottom: clamp(1.25rem, 2.5vh, 2rem);
+        padding-top: 0.5rem;
     }
 
     .role-badge {
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        padding: 0.55rem 1.75rem;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        padding: 0.5rem 1.5rem;
         border-radius: 50px;
-        font-size: 0.75rem;
-        letter-spacing: 0.12em;
+        font-size: 0.7rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
     }
 
     .actions {
@@ -293,17 +492,32 @@ import ModelViewer from "./ModelViewer.svelte";
     }
 
     .btn {
-        padding: 0.7rem 1.75rem;
+        padding: 0.65rem 1.6rem;
         border-radius: 50px;
-        font-size: 0.72rem;
+        font-size: 0.7rem;
+        font-weight: 500;
         cursor: pointer;
         text-transform: uppercase;
+        letter-spacing: 0.1em;
+        transition:
+            transform 0.2s,
+            opacity 0.2s;
+        border: 1px solid transparent;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn:hover {
+        transform: scale(1.04);
     }
 
     .btn.secondary {
         background: rgba(0, 0, 0, 0.25);
-        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-color: rgba(255, 255, 255, 0.45);
         color: white;
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
     }
 
     .btn.primary {
@@ -314,29 +528,168 @@ import ModelViewer from "./ModelViewer.svelte";
     .about-overlay {
         position: fixed;
         inset: 0;
-        background: rgba(3, 3, 3, 0.92);
-        z-index: 100;
+        background: rgba(3, 3, 3, 0.93);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        z-index: 200;
         display: none;
         align-items: center;
         justify-content: center;
         padding: 2rem;
     }
 
+    .about-content {
+        max-width: 480px;
+        width: 100%;
+        position: relative;
+    }
+
+    .about-eyebrow {
+        font-size: 0.6rem;
+        letter-spacing: 0.25em;
+        opacity: 0.3;
+        display: block;
+        margin-bottom: 1.5rem;
+        text-transform: uppercase;
+    }
+
+    .about-content h2 {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(2rem, 6vw, 3.5rem);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 1.5rem;
+    }
+
+    .about-content p {
+        font-size: 1rem;
+        line-height: 1.75;
+        opacity: 0.65;
+        font-weight: 300;
+        margin-bottom: 2.5rem;
+    }
+
+    .overlay-socials {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .overlay-socials a {
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        opacity: 0.4;
+        text-transform: uppercase;
+        transition: opacity 0.2s;
+    }
+
+    .overlay-socials a:hover {
+        opacity: 0.85;
+    }
+
+    .close-btn {
+        position: absolute;
+        top: -3rem;
+        right: 0;
+        background: none;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        font-size: 0.85rem;
+        cursor: pointer;
+        width: 2.25rem;
+        height: 2.25rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: border-color 0.2s;
+    }
+
+    .close-btn:hover {
+        border-color: rgba(255, 255, 255, 0.6);
+    }
+
+    @media (max-width: 1024px) {
+        .nav-pills {
+            display: none;
+        }
+        .nav-links {
+            margin-left: auto;
+        }
+    }
+
     @media (max-width: 768px) {
+        .nav-links {
+            display: none;
+        }
+        .nav-pills {
+            display: none;
+        }
+        .menu-toggle {
+            display: flex;
+        }
+        .mobile-menu {
+            display: flex;
+        }
+
         .hero-grid {
             grid-template-columns: 1fr;
-            text-align: center;
-            align-content: center;
-            justify-items: center;
-            min-height: 100%;
+            grid-template-rows: auto 1fr;
+            align-items: start;
+            padding-top: 1rem;
         }
 
-        .left {
+        .col-left {
             justify-content: center;
+            height: auto;
         }
 
-        .right {
-            margin-top: 2rem;
+        .astroid-shape {
+            width: clamp(160px, 70vw, 320px);
+            height: clamp(160px, 70vw, 320px);
+        }
+
+        .artist-name {
+            font-size: clamp(2.8rem, 14vw, 5rem);
+        }
+
+        .col-right {
+            height: 100%;
+            padding: 0;
+        }
+
+        .model-wrapper {
+            width: min(80vw, 45vh);
+            height: min(80vw, 45vh);
+        }
+
+        .bottom-ui {
+            flex-direction: column;
+            gap: 0.75rem;
+            align-items: stretch;
+            text-align: center;
+        }
+
+        .role-badge {
+            align-self: center;
+        }
+
+        .actions {
+            width: 100%;
+        }
+
+        .btn {
+            flex: 1;
+        }
+    }
+
+    @media (max-width: 380px) {
+        .artist-name {
+            font-size: clamp(2.2rem, 16vw, 4rem);
+        }
+        .model-wrapper {
+            width: min(90vw, 38vh);
+            height: min(90vw, 38vh);
         }
     }
 </style>
