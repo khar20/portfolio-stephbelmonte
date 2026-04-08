@@ -25,35 +25,35 @@
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         canvasContainer.appendChild(renderer.domElement);
 
-        // star field
-        const particlesGeometry = new THREE.BufferGeometry();
-        const particlesCount = 2000;
-        const posArray = new Float32Array(particlesCount * 3);
+        // star field (background system)
+        const starGeometry = new THREE.BufferGeometry();
+        const starCount = 2000;
+        const starPositions = new Float32Array(starCount * 3);
 
-        for (let i = 0; i < particlesCount * 3; i++) {
-            posArray[i] = (Math.random() - 0.5) * 20;
+        for (let i = 0; i < starCount * 3; i++) {
+            starPositions[i] = (Math.random() - 0.5) * 20;
         }
 
-        particlesGeometry.setAttribute(
+        starGeometry.setAttribute(
             "position",
-            new THREE.BufferAttribute(posArray, 3),
+            new THREE.BufferAttribute(starPositions, 3),
         );
 
-        const particlesMaterial = new THREE.PointsMaterial({
+        const starMaterial = new THREE.PointsMaterial({
             size: 0.02,
             color: 0xffffff,
             transparent: true,
             opacity: 0.8,
             blending: THREE.AdditiveBlending,
+            depthWrite: false, // stars stay in background
         });
 
-        const particlesMesh = new THREE.Points(
-            particlesGeometry,
-            particlesMaterial,
-        );
-        scene.add(particlesMesh);
+        const starfield = new THREE.Points(starGeometry, starMaterial);
+        starfield.renderOrder = 0;
+        scene.add(starfield);
 
-        // main model
+        // main model (foreground system)
+        // todo: replace placeholder geometry with actual model
         const geoGeometry = new THREE.IcosahedronGeometry(1.5, 0);
         const geoMaterial = new THREE.MeshStandardMaterial({
             color: 0xffffff,
@@ -62,9 +62,10 @@
             flatShading: true,
         });
 
-        const geoMesh = new THREE.Mesh(geoGeometry, geoMaterial);
-        geoMesh.position.set(3, 0, 0);
-        scene.add(geoMesh);
+        const model = new THREE.Mesh(geoGeometry, geoMaterial);
+        model.position.set(3, 0, 0);
+        model.renderOrder = 1;
+        scene.add(model);
 
         // lighting
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
@@ -81,70 +82,83 @@
         // mouse interaction
         let mouseX = 0;
         let mouseY = 0;
-        let targetX = 0;
-        let targetY = 0;
 
-        const windowHalfX = window.innerWidth / 2;
-        const windowHalfY = window.innerHeight / 2;
-
-        const onDocumentMouseMove = (event) => {
-            mouseX = event.clientX - windowHalfX;
-            mouseY = event.clientY - windowHalfY;
+        const handleMouseMove = (event) => {
+            mouseX = event.clientX - window.innerWidth / 2;
+            mouseY = event.clientY - window.innerHeight / 2;
         };
 
-        document.addEventListener("mousemove", onDocumentMouseMove);
+        document.addEventListener("mousemove", handleMouseMove);
 
         // animation loop
         const clock = new THREE.Clock();
+        let animationId;
 
         function animate() {
             const elapsedTime = clock.getElapsedTime();
 
-            targetX = mouseX * 0.001;
-            targetY = mouseY * 0.001;
+            // main model animation
+            model.rotation.y += 0.005;
+            model.rotation.x += 0.002;
+            model.position.y = Math.sin(elapsedTime * 0.5) * 0.2;
 
-            // rotation
-            geoMesh.rotation.y += 0.005;
-            geoMesh.rotation.x += 0.002;
+            // starfield animation (parallax)
+            starfield.rotation.y = elapsedTime * 0.05;
+            starfield.rotation.x = mouseY * 0.00005;
 
-            // floating
-            geoMesh.position.y = Math.sin(elapsedTime * 0.5) * 0.2;
-
-            // parallax stars
-            particlesMesh.rotation.y = elapsedTime * 0.05;
-            particlesMesh.rotation.x = mouseY * 0.00005;
-            particlesMesh.position.x +=
-                (mouseX * 0.0005 - particlesMesh.position.x) * 0.05;
-            particlesMesh.position.y +=
-                (-mouseY * 0.0005 - particlesMesh.position.y) * 0.05;
+            starfield.position.x +=
+                (mouseX * 0.0005 - starfield.position.x) * 0.05;
+            starfield.position.y +=
+                (-mouseY * 0.0005 - starfield.position.y) * 0.05;
 
             renderer.render(scene, camera);
-            requestAnimationFrame(animate);
+            animationId = requestAnimationFrame(animate);
         }
 
         animate();
 
         const handleResize = () => {
+            const isMobile = window.innerWidth < 768;
+
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
 
-            if (window.innerWidth < 768) {
-                geoMesh.position.set(0, 1.5, 0);
-                geoMesh.scale.set(0.8, 0.8, 0.8);
+            if (isMobile) {
+                model.position.set(0, 1.5, 0);
+                model.scale.set(0.8, 0.8, 0.8);
             } else {
-                geoMesh.position.set(3, 0, 0);
-                geoMesh.scale.set(1, 1, 1);
+                model.position.set(3, 0, 0);
+                model.scale.set(1, 1, 1);
             }
         };
 
         window.addEventListener("resize", handleResize);
         handleResize();
 
+        // cleanup
         return () => {
+            cancelAnimationFrame(animationId);
+
             window.removeEventListener("resize", handleResize);
-            document.removeEventListener("mousemove", onDocumentMouseMove);
+            document.removeEventListener("mousemove", handleMouseMove);
+
+            // dispose geometries & materials
+            starGeometry.dispose();
+            starMaterial.dispose();
+
+            geoGeometry.dispose();
+            geoMaterial.dispose();
+
             renderer.dispose();
+
+            // remove canvas
+            if (
+                renderer.domElement &&
+                canvasContainer.contains(renderer.domElement)
+            ) {
+                canvasContainer.removeChild(renderer.domElement);
+            }
         };
     });
 </script>
